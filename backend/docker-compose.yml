@@ -1,0 +1,16 @@
+# docker-compose.yml (sin la línea 'version')
+services:
+  web:
+    build: .
+    container_name: django-backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=1
+      - DJANGO_SETTINGS_MODULE=app.settings
+    # Comenta o elimina la línea 'env_file' si no tienes .env
+    # env_file:
+    #   - .env

@@ -1,38 +1,34 @@
-# backend/Dockerfile
+# Dockerfile
 FROM python:3.11-slim
 
-# Variables de entorno
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1
+# Establecer variables de entorno
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV DJANGO_SETTINGS_MODULE=app.settings
+ENV PIP_TRUSTED_HOST="pypi.org pypi.python.org files.pythonhosted.org"
+ENV PIP_DEFAULT_TIMEOUT=100
 
-# Instalar dependencias del sistema
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    libpq-dev \
-    libjpeg-dev \
-    zlib1g-dev \
-    libffi-dev \
-    curl \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# Crear directorio de trabajo
+# Establecer directorio de trabajo
 WORKDIR /app
 
-# Copiar requirements primero (mejor caché)
+# Instalar dependencias del sistema
+RUN apt-get update && apt-get install -y \
+    gcc \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Actualizar certificados
+RUN update-ca-certificates
+
+# Copiar requirements.txt primero
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+
+# Deshabilitar verificación SSL (solución temporal)
+RUN pip install --no-cache-dir --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org -r requirements.txt
 
 # Copiar el resto del código
 COPY . .
 
-# Script de entrada
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-# Exponer puerto
 EXPOSE 8000
 
-ENTRYPOINT ["/entrypoint.sh"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
