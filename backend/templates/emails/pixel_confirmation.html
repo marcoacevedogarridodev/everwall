@@ -1,0 +1,151 @@
+<!-- backend/templates/emails/pixel_confirmation.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Tu Pixel Eterno en Everwall</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .pixel-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .pixel-image {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .code {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            background: #e8eaff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .info-row {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            text-align: left;
+        }
+        .share-buttons {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+        .btn-primary {
+            background: #667eea;
+        }
+        .btn-facebook { background: #3b5998; }
+        .btn-twitter { background: #1da1f2; }
+        .btn-whatsapp { background: #25d366; }
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✨ ¡Tu Pixel es Eterno! ✨</h1>
+            <p>Bienvenido a la eternidad en Everwall</p>
+        </div>
+
+        <div class="content">
+            <h2>¡Felicidades {{ pixel.owner_name|default:"usuario" }}!</h2>
+            <p>Tu pixel ha sido comprado y vivirá para siempre en Everwall. Aquí están los detalles de tu compra:</p>
+
+            <div class="pixel-card">
+                <h3>Tu Pixel</h3>
+                {% if image_url %}
+                <img src="{{ image_url }}" alt="Tu pixel" class="pixel-image">
+                {% endif %}
+
+                <div class="code">{{ display_code }}</div>
+                <p><strong>Coordenadas:</strong> {{ coordinates }}</p>
+                <p><strong>Fecha de compra:</strong> {{ purchased_date }}</p>
+                <p><strong>Código de búsqueda:</strong> <code>{{ search_code }}</code></p>
+
+                {% if pixel.owner_message %}
+                <div class="info-row">
+                    <strong>Tu mensaje:</strong>
+                    <p style="margin: 10px 0 0 0; font-style: italic;">"{{ pixel.owner_message }}"</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="share-buttons">
+                <h3>Comparte tu logro</h3>
+                <a href="{{ share_facebook }}" class="btn btn-facebook" target="_blank">Facebook</a>
+                <a href="{{ share_twitter }}" class="btn btn-twitter" target="_blank">Twitter</a>
+                <a href="{{ share_whatsapp }}" class="btn btn-whatsapp" target="_blank">WhatsApp</a>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="{{ pixel_url }}" class="btn btn-primary">Ver mi pixel</a>
+                <a href="{{ grid_url }}" class="btn btn-primary" style="background: #6c757d;">Ver grilla completa</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Everwall - Pixeles que viven para siempre</p>
+            <p>¿Preguntas? Contacta a <a href="mailto:soporte@everwall.com">soporte@everwall.com</a></p>
+            <p><small>Este es un correo automático, por favor no responder.</small></p>
+        </div>
+    </div>
+</body>
+</html>

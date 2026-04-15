@@ -1,16 +1,17 @@
-# docker-compose.yml (sin la línea 'version')
+# backend/docker-compose.yml
+version: '3.8'
+
 services:
-  web:
+  backend:
     build: .
-    container_name: django-backend
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/app
+    container_name: everwall_backend
     ports:
       - "8000:8000"
+    volumes:
+      - .:/app
+      - ./media:/app/media
+      - ./static:/app/static
     environment:
-      - DEBUG=1
-      - DJANGO_SETTINGS_MODULE=app.settings
-    # Comenta o elimina la línea 'env_file' si no tienes .env
-    # env_file:
-    #   - .env
+      - DEBUG=True
+      - DJANGO_SECRET_KEY=dev-secret-key-change-in-production
+    restart: unless-stopped

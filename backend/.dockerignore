@@ -1,4 +1,4 @@
-.dockerignore
+# backend/.dockerignore
 __pycache__
 *.pyc
 *.pyo
@@ -9,14 +9,19 @@ __pycache__
 *.egg-info
 dist
 build
-.env
-.venv
-env
-venv
-ENV
-db.sqlite3
+.env.local
 .git
 .gitignore
 README.md
-.vscode
-.idea
+*.log
+venv/
+env/
+.venv/
+.vscode/
+.idea/
+*.sqlite3
+media/
+static/
+backup/
+logs/
+.DS_Store

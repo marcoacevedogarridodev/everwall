@@ -1,32 +1,31 @@
-# Dockerfile
+# backend/Dockerfile con certificados
 FROM python:3.11-slim
 
-# Establecer variables de entorno
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-ENV DJANGO_SETTINGS_MODULE=app.settings
-ENV PIP_TRUSTED_HOST="pypi.org pypi.python.org files.pythonhosted.org"
-ENV PIP_DEFAULT_TIMEOUT=100
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-# Establecer directorio de trabajo
 WORKDIR /app
 
-# Instalar dependencias del sistema
-RUN apt-get update && apt-get install -y \
+# Instalar certificados CA actualizados
+RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
+    libpq-dev \
+    libjpeg-dev \
+    zlib1g-dev \
+    libffi-dev \
+    curl \
     ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+    && update-ca-certificates \
+    && apt-get clean
 
-# Actualizar certificados
-RUN update-ca-certificates
+# Configurar pip para usar SSL con certificados del sistema
+RUN pip install --upgrade pip setuptools wheel
 
-# Copiar requirements.txt primero
 COPY requirements.txt .
 
-# Deshabilitar verificación SSL (solución temporal)
-RUN pip install --no-cache-dir --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org -r requirements.txt
+# Deshabilitar verificación SSL solo para construcción (no recomendado para producción)
+RUN pip install --no-cache-dir --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt
 
-# Copiar el resto del código
 COPY . .
 
 EXPOSE 8000
